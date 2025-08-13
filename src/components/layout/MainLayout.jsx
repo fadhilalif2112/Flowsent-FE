@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Menu, Mail, Search } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Menu, Mail, Search, X } from "lucide-react";
 import ProfileDropdown from "../ui/ProfileDropdown";
 import {
   Home,
@@ -24,52 +24,111 @@ const sidebarItems = [
 
 const MainLayout = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("home");
   const [profileOpen, setProfileOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      // Auto-collapse sidebar on mobile
+      if (window.innerWidth < 768) {
+        setSidebarCollapsed(true);
+        setMobileMenuOpen(false);
+      }
+    };
+
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, []);
+
+  const handleSidebarToggle = () => {
+    if (isMobile) {
+      setMobileMenuOpen(!mobileMenuOpen);
+    } else {
+      setSidebarCollapsed(!sidebarCollapsed);
+    }
+  };
+
+  const handleTabClick = (key) => {
+    setActiveTab(key);
+    // Close mobile menu when item is selected
+    if (isMobile) {
+      setMobileMenuOpen(false);
+    }
+  };
 
   return (
-    <div className="h-screen flex bg-slate-900">
+    <div className="h-screen flex bg-slate-900 relative">
+      {/* Mobile Overlay */}
+      {isMobile && mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-xs z-40 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <div
-        className={`bg-slate-900 border-r border-slate-700 flex flex-col transition-all duration-300 ${
-          sidebarCollapsed ? "w-16" : "w-64"
+        className={`bg-slate-900 border-r border-slate-700 flex flex-col transition-all duration-300 z-50 ${
+          isMobile
+            ? `fixed left-0 top-0 h-full ${
+                mobileMenuOpen ? "translate-x-0 w-64" : "-translate-x-full w-64"
+              }`
+            : sidebarCollapsed
+            ? "w-16"
+            : "w-64"
         }`}
       >
         {/* Logo */}
-        <div className="p-6 border-b border-slate-700">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-              <Mail className="w-5 h-5 text-white" />
+        <div className="p-4 md:p-6 border-b border-slate-700">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                <Mail className="w-6 h-6 text-white" />
+              </div>
+              {(!sidebarCollapsed || isMobile) && (
+                <span className="text-white font-bold text-xl italic">
+                  FLOWSENT
+                </span>
+              )}
             </div>
-            {!sidebarCollapsed && (
-              <span className="text-white font-bold text-xl italic">
-                FLOWSENT
-              </span>
+            {/* Close button for mobile */}
+            {isMobile && (
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2 text-slate-400 hover:text-white rounded-lg"
+              >
+                <X size={20} />
+              </button>
             )}
           </div>
         </div>
 
         {/* Navigation */}
         <nav
-          className={`space-y-1 flex-1 ${
-            sidebarCollapsed ? "px-2" : "px-4"
-          } py-4`}
+          className={`space-y-1 flex-1 py-4 ${
+            sidebarCollapsed && !isMobile ? "px-2" : "px-4"
+          }`}
         >
           {sidebarItems.map((item) => (
             <button
               key={item.key}
-              onClick={() => setActiveTab(item.key)}
+              onClick={() => handleTabClick(item.key)}
               className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-colors relative ${
                 activeTab === item.key
                   ? "bg-slate-700 text-white"
                   : "text-slate-400 hover:text-white hover:bg-slate-800"
-              } ${sidebarCollapsed ? "justify-center" : ""}`}
-              title={sidebarCollapsed ? item.label : ""}
+              } ${sidebarCollapsed && !isMobile ? "justify-center" : ""}`}
+              title={sidebarCollapsed && !isMobile ? item.label : ""}
             >
               <item.icon size={18} />
-              {!sidebarCollapsed && (
+              {(!sidebarCollapsed || isMobile) && (
                 <>
-                  <span>{item.label}</span>
+                  <span className="text-sm md:text-base">{item.label}</span>
                   {item.count && (
                     <div className="ml-auto bg-slate-600 text-white text-xs px-2 py-1 rounded-full">
                       {item.count}
@@ -77,7 +136,7 @@ const MainLayout = ({ children }) => {
                   )}
                 </>
               )}
-              {sidebarCollapsed && item.count && (
+              {sidebarCollapsed && !isMobile && item.count && (
                 <div className="absolute -top-1 -right-1 bg-slate-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
                   {item.count}
                 </div>
@@ -89,56 +148,66 @@ const MainLayout = ({ children }) => {
         {/* Profile Section */}
         <div
           className={`border-t border-slate-700 ${
-            sidebarCollapsed ? "p-2" : "p-4"
+            sidebarCollapsed && !isMobile ? "p-2" : "p-4"
           }`}
         >
-          {!sidebarCollapsed ? (
-            <>
-              <button className="w-full flex items-center gap-3 px-3 py-2 mt-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
-                <LogOut size={16} />
-                <span>Logout</span>
-              </button>
-            </>
+          {!sidebarCollapsed || isMobile ? (
+            <button className="w-full flex items-center gap-3 px-3 py-2 mt-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors">
+              <LogOut size={16} />
+              <span className="text-sm md:text-base">Logout</span>
+            </button>
           ) : (
-            <div className="space-y-2">
-              <button
-                className="w-full p-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors flex items-center justify-center"
-                title="Logout"
-              >
-                <LogOut size={16} />
-              </button>
-            </div>
+            <button
+              className="w-full p-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors flex items-center justify-center"
+              title="Logout"
+            >
+              <LogOut size={16} />
+            </button>
           )}
         </div>
       </div>
 
-      {/* Topbar/Nav */}
-      <div className="flex-1 flex flex-col">
-        <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Topbar/Nav */}
+        <div className="bg-white border-b border-gray-200 px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 md:gap-4">
             <button
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              onClick={handleSidebarToggle}
               className="p-2 text-gray-400 hover:text-blue-600 hover:bg-gray-100 rounded-lg transition-colors"
-              title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              title={
+                isMobile
+                  ? "Toggle menu"
+                  : sidebarCollapsed
+                  ? "Expand sidebar"
+                  : "Collapse sidebar"
+              }
             >
               <Menu className="w-5 h-5" />
             </button>
           </div>
-          <div className="flex-1 max-w-md mx-4">
+
+          {/* Search Bar */}
+          <div className="flex-1 max-w-md mx-2 md:mx-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
                 type="text"
                 placeholder="Search emails..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-2 text-sm md:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>
-          <ProfileDropdown
-            isOpen={profileOpen}
-            onToggle={() => setProfileOpen(!profileOpen)}
-          />
+
+          {/* Profile Dropdown */}
+          <div className="flex items-center">
+            <ProfileDropdown
+              isOpen={profileOpen}
+              onToggle={() => setProfileOpen(!profileOpen)}
+            />
+          </div>
         </div>
+
         {/* Main Content */}
         <div className="flex-1 overflow-auto bg-white">{children}</div>
       </div>
