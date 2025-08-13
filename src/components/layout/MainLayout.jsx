@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Menu, Mail, Search, X } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import ProfileDropdown from "../ui/ProfileDropdown";
 import {
-  Home,
+  Menu,
+  Mail,
+  Search,
+  X,
+  Mailbox,
+  Mails,
   Edit,
   Star,
   Send,
@@ -13,21 +18,32 @@ import {
 } from "lucide-react";
 
 const sidebarItems = [
-  { icon: Home, label: "Home", key: "home" },
-  { icon: Edit, label: "Compose", key: "compose" },
-  { icon: Star, label: "Starred", key: "starred" },
-  { icon: Send, label: "Sent", key: "sent" },
-  { icon: FileText, label: "Drafts", key: "drafts", count: 2 },
-  { icon: Archive, label: "Archive", key: "archive" },
-  { icon: Trash2, label: "Trash", key: "trash" },
+  { icon: Mails, label: "Inbox", key: "inbox", path: "/inbox" },
+  { icon: Edit, label: "Compose", key: "compose", path: null }, // No routing for compose
+  { icon: Star, label: "Starred", key: "starred", path: "/starred" },
+  { icon: Send, label: "Sent", key: "sent", path: "/sent" },
+  { icon: FileText, label: "Drafts", key: "drafts", count: 2, path: "/drafts" },
+  { icon: Archive, label: "Archive", key: "archive", path: "/archive" },
+  { icon: Trash2, label: "Trash", key: "trash", path: "/trash" },
 ];
 
 const MainLayout = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("home");
   const [profileOpen, setProfileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get active tab from current path
+  const getActiveTab = () => {
+    const currentPath = location.pathname;
+    const currentItem = sidebarItems.find((item) => item.path === currentPath);
+    return currentItem ? currentItem.key : "home";
+  };
+
+  const activeTab = getActiveTab();
 
   // Check if device is mobile
   useEffect(() => {
@@ -53,8 +69,17 @@ const MainLayout = ({ children }) => {
     }
   };
 
-  const handleTabClick = (key) => {
-    setActiveTab(key);
+  const handleTabClick = (item) => {
+    if (item.key === "compose") {
+      // Handle compose action (could open modal, etc.)
+      console.log("Compose clicked - implement compose functionality");
+      return;
+    }
+
+    if (item.path) {
+      navigate(item.path);
+    }
+
     // Close mobile menu when item is selected
     if (isMobile) {
       setMobileMenuOpen(false);
@@ -88,7 +113,7 @@ const MainLayout = ({ children }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center">
-                <Mail className="w-6 h-6 text-white" />
+                <Mailbox className="w-6 h-6 text-white" />
               </div>
               {(!sidebarCollapsed || isMobile) && (
                 <span className="text-white font-bold text-xl italic">
@@ -117,7 +142,7 @@ const MainLayout = ({ children }) => {
           {sidebarItems.map((item) => (
             <button
               key={item.key}
-              onClick={() => handleTabClick(item.key)}
+              onClick={() => handleTabClick(item)}
               className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-colors relative ${
                 activeTab === item.key
                   ? "bg-slate-700 text-white"

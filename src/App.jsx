@@ -1,44 +1,38 @@
 import React from "react";
-import useEmailSelection from "./hooks/useEmailSelection";
-import EmailToolbar from "./components/email/EmailToolbar";
-import EmailList from "./components/email/EmailList";
-import { sampleEmails } from "./data/sampleEmails";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import MainLayout from "./components/layout/MainLayout";
+import HomePage from "./pages/HomePage";
+import StarredPage from "./pages/StarredPage";
+import SentPage from "./pages/SentPage";
+import DraftsPage from "./pages/DraftsPage";
+import ArchivePage from "./pages/ArchivePage";
+import TrashPage from "./pages/TrashPage";
+import NotFound from "./pages/NotFound";
 import "./App.css";
 
 function App() {
-  const { selectedEmails, selectAll, toggleSelectAll, toggleEmailSelection } =
-    useEmailSelection(sampleEmails);
-
-  const handleArchive = () => {
-    console.log("Archive emails:", selectedEmails);
-  };
-
-  const handleDelete = () => {
-    console.log("Delete emails:", selectedEmails);
-  };
-
-  const handleStar = () => {
-    console.log("Star emails:", selectedEmails);
-  };
-
   return (
-    <MainLayout>
-      <EmailToolbar
-        selectedCount={selectedEmails.length}
-        selectAll={selectAll}
-        onSelectAll={toggleSelectAll}
-        onArchive={handleArchive}
-        onDelete={handleDelete}
-        onStar={handleStar}
-      />
-
-      <EmailList
-        emails={sampleEmails}
-        selectedEmails={selectedEmails}
-        onToggleSelect={toggleEmailSelection}
-      />
-    </MainLayout>
+    <Router>
+      <MainLayout>
+        <Routes>
+          {/* Routes ketika path tidak ada */}
+          <Route path="*" element={<NotFound />} />
+          {/* Routes */}
+          <Route path="/" element={<Navigate to="/inbox" replace />} />
+          <Route path="/inbox" element={<HomePage />} />
+          <Route path="/starred" element={<StarredPage />} />
+          <Route path="/sent" element={<SentPage />} />
+          <Route path="/drafts" element={<DraftsPage />} />
+          <Route path="/archive" element={<ArchivePage />} />
+          <Route path="/trash" element={<TrashPage />} />
+        </Routes>
+      </MainLayout>
+    </Router>
   );
 }
 

@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Archive,
-  Trash2,
-  Mail,
-  Clock,
-  MoreHorizontal,
-  Plus,
-} from "lucide-react";
+import { Archive, Trash2, Mail, Clock, PencilLine } from "lucide-react";
 
 const EmailToolbar = ({
   selectedCount,
@@ -55,7 +48,7 @@ const EmailToolbar = ({
             </button>
           </div>
           <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg font-medium flex items-center space-x-1 transition-colors text-sm">
-            <Plus className="w-4 h-4" />
+            <PencilLine className="w-4 h-4" />
             <span className="hidden xs:inline">Compose</span>
           </button>
         </div>
@@ -90,7 +83,7 @@ const EmailToolbar = ({
         </div>
 
         <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2 transition-colors">
-          <Plus className="w-4 h-4" />
+          <PencilLine className="w-4 h-4" />
           <span>Compose</span>
         </button>
       </div>
