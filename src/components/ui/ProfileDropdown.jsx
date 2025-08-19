@@ -1,7 +1,7 @@
 import React from "react";
 import { User, Settings, LogOut } from "lucide-react";
 
-const ProfileDropdown = ({ isOpen, onToggle }) => {
+const ProfileDropdown = ({ isOpen, onToggle, onClickNavigate }) => {
   return (
     <div className="relative">
       <button
@@ -22,7 +22,10 @@ const ProfileDropdown = ({ isOpen, onToggle }) => {
             <p className="font-medium text-gray-900">John Doe</p>
             <p className="text-sm text-gray-500">john.doe@flowsent.com</p>
           </div>
-          <button className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center space-x-2 text-gray-700">
+          <button
+            className="w-full text-left px-4 py-2 hover:bg-gray-50 flex items-center space-x-2 text-gray-700"
+            onClick={onClickNavigate}
+          >
             <Settings className="w-4 h-4" />
             <span>Settings</span>
           </button>

@@ -12,18 +12,6 @@ const ArchivePage = () => {
   const { selectedEmails, selectAll, toggleSelectAll, toggleEmailSelection } =
     useEmailSelection(archivedEmails);
 
-  const handleUnarchive = () => {
-    console.log("Unarchive emails:", selectedEmails);
-  };
-
-  const handleDelete = () => {
-    console.log("Delete archived emails:", selectedEmails);
-  };
-
-  const handleStar = () => {
-    console.log("Star archived emails:", selectedEmails);
-  };
-
   if (archivedEmails.length === 0) {
     return (
       <>
@@ -31,9 +19,6 @@ const ArchivePage = () => {
           selectedCount={selectedEmails.length}
           selectAll={selectAll}
           onSelectAll={toggleSelectAll}
-          onArchive={handleUnarchive}
-          onDelete={handleDelete}
-          onStar={handleStar}
         />
 
         <div className="flex-1 flex items-center justify-center">
@@ -57,9 +42,6 @@ const ArchivePage = () => {
         selectedCount={selectedEmails.length}
         selectAll={selectAll}
         onSelectAll={toggleSelectAll}
-        onArchive={handleUnarchive}
-        onDelete={handleDelete}
-        onStar={handleStar}
       />
 
       <EmailList

@@ -12,18 +12,6 @@ const TrashPage = () => {
   const { selectedEmails, selectAll, toggleSelectAll, toggleEmailSelection } =
     useEmailSelection(deletedEmails);
 
-  const handleRestore = () => {
-    console.log("Restore emails:", selectedEmails);
-  };
-
-  const handlePermanentDelete = () => {
-    console.log("Permanently delete emails:", selectedEmails);
-  };
-
-  const handleStar = () => {
-    console.log("Star deleted emails:", selectedEmails);
-  };
-
   if (deletedEmails.length === 0) {
     return (
       <>
@@ -31,9 +19,6 @@ const TrashPage = () => {
           selectedCount={selectedEmails.length}
           selectAll={selectAll}
           onSelectAll={toggleSelectAll}
-          onArchive={handleRestore}
-          onDelete={handlePermanentDelete}
-          onStar={handleStar}
         />
 
         <div className="flex-1 flex items-center justify-center">
@@ -69,9 +54,6 @@ const TrashPage = () => {
         selectedCount={selectedEmails.length}
         selectAll={selectAll}
         onSelectAll={toggleSelectAll}
-        onArchive={handleRestore}
-        onDelete={handlePermanentDelete}
-        onStar={handleStar}
       />
 
       <EmailList

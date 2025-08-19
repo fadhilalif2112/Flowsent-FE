@@ -19,7 +19,7 @@ import {
 
 const sidebarItems = [
   { icon: Mails, label: "Inbox", key: "inbox", path: "/inbox" },
-  { icon: Edit, label: "Compose", key: "compose", path: null }, // No routing for compose
+  { icon: Edit, label: "Compose", key: "compose", path: null }, // No routing for compose yet
   { icon: Star, label: "Starred", key: "starred", path: "/starred" },
   { icon: Send, label: "Sent", key: "sent", path: "/sent" },
   { icon: FileText, label: "Drafts", key: "drafts", count: 2, path: "/drafts" },
@@ -40,7 +40,7 @@ const MainLayout = ({ children }) => {
   const getActiveTab = () => {
     const currentPath = location.pathname;
     const currentItem = sidebarItems.find((item) => item.path === currentPath);
-    return currentItem ? currentItem.key : "home";
+    return currentItem ? currentItem.key : "inbox";
   };
 
   const activeTab = getActiveTab();
@@ -73,6 +73,7 @@ const MainLayout = ({ children }) => {
     if (item.key === "compose") {
       // Handle compose action (could open modal, etc.)
       console.log("Compose clicked - implement compose functionality");
+      navigate("/compose");
       return;
     }
 
@@ -170,7 +171,7 @@ const MainLayout = ({ children }) => {
           ))}
         </nav>
 
-        {/* Profile Section */}
+        {/* Bottom Sidebar */}
         <div
           className={`border-t border-slate-700 ${
             sidebarCollapsed && !isMobile ? "p-2" : "p-4"
@@ -229,6 +230,7 @@ const MainLayout = ({ children }) => {
             <ProfileDropdown
               isOpen={profileOpen}
               onToggle={() => setProfileOpen(!profileOpen)}
+              onClickNavigate={() => navigate("/profile")}
             />
           </div>
         </div>

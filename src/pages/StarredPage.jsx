@@ -12,18 +12,6 @@ const StarredPage = () => {
   const { selectedEmails, selectAll, toggleSelectAll, toggleEmailSelection } =
     useEmailSelection(starredEmails);
 
-  const handleArchive = () => {
-    console.log("Archive starred emails:", selectedEmails);
-  };
-
-  const handleDelete = () => {
-    console.log("Delete starred emails:", selectedEmails);
-  };
-
-  const handleStar = () => {
-    console.log("Unstar emails:", selectedEmails);
-  };
-
   if (starredEmails.length === 0) {
     return (
       <>
@@ -31,9 +19,6 @@ const StarredPage = () => {
           selectedCount={selectedEmails.length}
           selectAll={selectAll}
           onSelectAll={toggleSelectAll}
-          onArchive={handleArchive}
-          onDelete={handleDelete}
-          onStar={handleStar}
         />
 
         <div className="flex-1 flex items-center justify-center">
@@ -57,9 +42,6 @@ const StarredPage = () => {
         selectedCount={selectedEmails.length}
         selectAll={selectAll}
         onSelectAll={toggleSelectAll}
-        onArchive={handleArchive}
-        onDelete={handleDelete}
-        onStar={handleStar}
       />
 
       <EmailList

@@ -12,18 +12,6 @@ const DraftsPage = () => {
   const { selectedEmails, selectAll, toggleSelectAll, toggleEmailSelection } =
     useEmailSelection(draftEmails);
 
-  const handleArchive = () => {
-    console.log("Archive draft emails:", selectedEmails);
-  };
-
-  const handleDelete = () => {
-    console.log("Delete draft emails:", selectedEmails);
-  };
-
-  const handleStar = () => {
-    console.log("Star draft emails:", selectedEmails);
-  };
-
   if (draftEmails.length === 0) {
     return (
       <>
@@ -31,9 +19,6 @@ const DraftsPage = () => {
           selectedCount={selectedEmails.length}
           selectAll={selectAll}
           onSelectAll={toggleSelectAll}
-          onArchive={handleArchive}
-          onDelete={handleDelete}
-          onStar={handleStar}
         />
 
         <div className="flex-1 flex items-center justify-center">
@@ -57,9 +42,6 @@ const DraftsPage = () => {
         selectedCount={selectedEmails.length}
         selectAll={selectAll}
         onSelectAll={toggleSelectAll}
-        onArchive={handleArchive}
-        onDelete={handleDelete}
-        onStar={handleStar}
       />
 
       <EmailList

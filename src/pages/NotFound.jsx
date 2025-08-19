@@ -7,7 +7,7 @@ function NotFound() {
       <h1 className="text-7xl font-bold text-blue-600 mb-4">404</h1>
       <h2 className="text-2xl font-semibold mb-2">Halaman Tidak Ditemukan</h2>
       <p className="mb-6 text-gray-500">
-        Maaf, halaman yang Anda cari tidak tersedia.
+        Maaf, halaman yang Anda tuju tidak tersedia.
       </p>
       <Link
         to="/"

@@ -13,6 +13,8 @@ import DraftsPage from "./pages/DraftsPage";
 import ArchivePage from "./pages/ArchivePage";
 import TrashPage from "./pages/TrashPage";
 import NotFound from "./pages/NotFound";
+import ComposePage from "./pages/ComposePage";
+import ProfilePage from "./pages/ProfilePage";
 import "./App.css";
 
 function App() {
@@ -30,6 +32,8 @@ function App() {
           <Route path="/drafts" element={<DraftsPage />} />
           <Route path="/archive" element={<ArchivePage />} />
           <Route path="/trash" element={<TrashPage />} />
+          <Route path="/compose" element={<ComposePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </MainLayout>
     </Router>

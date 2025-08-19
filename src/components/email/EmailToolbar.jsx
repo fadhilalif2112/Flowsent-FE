@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import { Archive, Trash2, Mail, Clock, PencilLine } from "lucide-react";
 
-const EmailToolbar = ({
-  selectedCount,
-  selectAll,
-  onSelectAll,
-  onArchive,
-  onDelete,
-  onStar,
-}) => {
+const EmailToolbar = ({ selectedCount, selectAll, onSelectAll }) => {
   const [showMoreActions, setShowMoreActions] = useState(false);
 
   return (
